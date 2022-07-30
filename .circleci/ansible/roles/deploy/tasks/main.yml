@@ -1,0 +1,30 @@
+- name: Make directory for install
+  file:
+    path: ~/backend
+    state: directory
+    owner: ubuntu
+    group: ubuntu
+    mode: 0755
+
+- name: Extract backend to folder
+  become_user: ubuntu
+  unarchive:
+    src: /home/backend.tar.gz
+    dest: ~/backend
+    owner: ubuntu
+    group: ubuntu
+    mode: 0755
+
+- name: Install dependencies
+  become: true
+  shell: |
+    cd ~/backend
+    sudo npm install -g npm@latest
+    sudo npm install -g webpack-dev-server
+    sudo npm install
+
+- name: Build and run PM2 server
+  shell: |
+    cd ~/backend
+    sudo npm run build:prod
+    pm2 start npm --name backend -- start
