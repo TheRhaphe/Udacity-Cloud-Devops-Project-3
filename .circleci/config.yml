@@ -155,14 +155,20 @@ jobs:
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" \
               --tags project=udapeople
       - run:
-          name: save the new ec2url to memory using kvdb
+          name: save backend url
           command: |
-            backend_url=$(aws ec2 describe-instances \
-              --query 'Reservations[*].Instances[*].PublicIpAddress' \
+            BACKEND_URL=`aws ec2 describe-instances \
               --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
-              --output text) \
-              curl "https://kvdb.io/${KVDB_API}/backend-${CIRCLE_WORKFLOW_ID:0:7}" \
-              -d "http://${backend_url}:3030"
+              --query "Reservations[*].Instances[*].[PublicDnsName]" \
+              --output text | tr -d '\n'`
+            echo $BACKEND_URL >> .circleci/ansible/inventory.txt
+            
+            cat .circleci/ansible/inventory.txt
+            
+            curl "https://kvdb.io/${KVDB_API}/backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+              -d "http://${$BACKEND_URL}:3030"
+              
+            echo $BACKEND_URL
       - persist_to_workspace:
           root: ~/
           paths:
@@ -217,7 +223,7 @@ jobs:
           command: |
             if grep -q "has been executed successfully"  ./backend/migrations_dump.txt 
             then
-            curl "https://kvdb.io/${KVDB_API}/migration-${CIRCLE_WORKFLOW_ID:0:7}"  -d '1'
+              curl "https://kvdb.io/${KVDB_API}/migration-${CIRCLE_WORKFLOW_ID:0:7}"  -d '1'
             fi
       - revert-migrations
       - destroy-environment:
