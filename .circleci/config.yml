@@ -265,7 +265,7 @@ jobs:
 
   deploy-backend:
     docker:
-      - image: cimg/base:stable
+      - image: willhallonline/ansible:2.10-ubuntu-18.04
     steps:
       - checkout
       - add_ssh_keys:
@@ -277,15 +277,10 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            sudo apt update
-            sudo apt install software-properties-common -y
-            sudo add-apt-repository --yes --update ppa:ansible/ansible
-            sudo apt install ansible -y
-            curl -fsSL https://deb.nodesource.com/setup_13.x | sudo -E bash -
-            sudo apt install -y nodejs
-            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-            unzip awscliv2.zip
-            sudo ./aws/install
+            apt -y update
+            apt -y install jq tar gzip git curl
+            curl -sL https://deb.nodesource.com/setup_12.x | bash -
+            apt -y install nodejs
       - run:
           name: Configure Server
           no_output_timeout: 60m
@@ -302,15 +297,21 @@ jobs:
             echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> "backend/.env"
             echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> "backend/.env"
       - run:
-          name: Deploy backend
+          name: Build and deploy backend
           command: |
             cd backend
-            npm i
+            cat .env
+            npm install
             npm run build
-            cd ../
-            tar -C backend -czvf artifact.tar.gz .
-            cp artifact.tar.gz /home/circleci/project/.circleci/ansible/roles/deploy/files
-            ansible-playbook -i .circleci/ansible/inventory.txt .circleci/ansible/deploy-backend.yml -vvv
+            tar -pczvf /home/backend.tar.gz .
+            cd ~/project/.circleci/ansible
+            export ANSIBLE_HOST_KEY_CHECKING=False
+            ansible-playbook deploy-backend.yml --inventory-file=inventory.txt
+      - run:
+          name: Install AWS CLI
+          when: on_fail
+          command: |
+            pip3 install --upgrade pip && pip3 install awscli
       - revert-migrations
       - destroy-environment:
           workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
