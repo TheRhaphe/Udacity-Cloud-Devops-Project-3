@@ -164,9 +164,6 @@ jobs:
             echo $BACKEND_URL >> .circleci/ansible/inventory.txt
             
             cat .circleci/ansible/inventory.txt
-            
-            curl "https://kvdb.io/${KVDB_API}/backend-${CIRCLE_WORKFLOW_ID:0:7}" \
-              -d "http://${$BACKEND_URL}:3030"
               
             echo $BACKEND_URL
       - persist_to_workspace:
