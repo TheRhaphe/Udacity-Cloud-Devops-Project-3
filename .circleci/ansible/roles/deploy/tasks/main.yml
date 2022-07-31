@@ -19,7 +19,7 @@
   become: true
   shell: |
     cd ~/backend
-    sudo npm install -g npm@latest
+    #sudo npm install -g npm@latest
     sudo npm install -g webpack-dev-server
     sudo npm install
 
