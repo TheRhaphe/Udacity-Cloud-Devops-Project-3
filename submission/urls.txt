@@ -1,3 +1,8 @@
 [URL01]
 https://github.com/TheRhaphe/Udacity-Cloud-Devops-Project-3
 
+[URL03]
+https://d3aaapm3ayyv6v.cloudfront.net
+
+[URL04]
+http://ec2-52-91-25-62.compute-1.amazonaws.com:3030/api/status
