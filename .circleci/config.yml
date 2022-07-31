@@ -332,12 +332,8 @@ jobs:
           command: |
             cat .circleci/ansible/inventory.txt
             export BACKEND_URL=$(sed -n 2p .circleci/ansible/inventory.txt)
-            echo `curl -s http://${BACKEND_URL}:3030/api/status`
             
-            curl http://${BACKEND_URL}:3030/api/status
-            curl http://${BACKEND_URL}:3030/api/status
-            
-            if curl http://${BACKEND_URL}:3030/api/status | grep "ok"
+            if curl -s -v --connect-timeout 30 --retry-connrefused 5 http://${BACKEND_URL}:3030/api/status | grep "ok"
             then
                 return 0
             else
