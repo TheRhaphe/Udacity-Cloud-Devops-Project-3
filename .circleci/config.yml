@@ -325,6 +325,7 @@ jobs:
           name: Install dependencies
           command: |
             apk add --update tar gzip ansible nodejs npm curl jq
+            pip3 install --upgrade pip && pip3 install awscli
       - attach_workspace:
           at: ~/
       - run:
@@ -350,14 +351,9 @@ jobs:
             else
               return 1
             fi
-      - run:
-          name: Install AWS CLI
-          when: on_fail
-          command: |
-            pip3 install --upgrade pip && pip3 install awscli
-      - revert-migrations
       - destroy-environment:
           workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
+      - revert-migrations
 
 #  cloudfront-update:
 #    docker:
