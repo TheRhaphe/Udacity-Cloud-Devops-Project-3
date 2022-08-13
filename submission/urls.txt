@@ -2,7 +2,7 @@
 https://github.com/TheRhaphe/Udacity-Cloud-Devops-Project-3
 
 [URL02]
-http://udapeople-86b9969.s3.amazonaws.com/
+http://udapeople-038d745.s3-website-us-east-1.amazonaws.com
 
 [URL03]
 https://d3aaapm3ayyv6v.cloudfront.net
