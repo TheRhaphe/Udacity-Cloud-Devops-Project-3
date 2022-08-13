@@ -389,20 +389,19 @@ jobs:
           name: update stack
           command: |
             # Fetch the Old workflow ID
-            export OldWorkflowID=$(aws cloudformation list-exports --query "Exports[?Name==\`WorkflowID\`].Value" --no-paginate --output text)
-            echo OldWorkflowID: "${OldWorkflowID}"
-            echo CIRCLE_WORKFLOW_ID "${CIRCLE_WORKFLOW_ID:0:7}"
+            export LatestWorkflowID=("${CIRCLE_WORKFLOW_ID:0:7}")
+            echo LatestWorkflowID "${LatestWorkflowID}"
             # Fetch the stack names          
             export STACKS=($(aws cloudformation list-stacks --query "StackSummaries[*].StackName" --stack-status-filter CREATE_COMPLETE --no-paginate --output text))
             echo Stack names: "${STACKS[@]}"
     
             for i in "${STACKS[@]}"
             do
-              if [[ "$i" != "${OldWorkflowID}" ]]
+              export T1=("${i##udapeople-frontend-}")
+              export T2=("${T1##udapeople-backend-}")
+              if [ "$T2" != "${LatestWorkflowID}" ]
               then
                 echo "Deleting $i"
-                export T1=("${i##udapeople-frontend-}")
-                export T2=("${T1##udapeople-backend-}")
                 aws s3 rm s3://udapeople-$T2 --recursive 
                 aws cloudformation delete-stack --stack-name $i
               fi
