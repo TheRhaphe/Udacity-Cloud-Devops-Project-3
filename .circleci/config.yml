@@ -395,13 +395,18 @@ jobs:
             # Fetch the stack names          
             export STACKS=($(aws cloudformation list-stacks --query "StackSummaries[*].StackName" --stack-status-filter CREATE_COMPLETE --no-paginate --output text))
             echo Stack names: "${STACKS[@]}"
-            if [[ "${STACKS[@]}" =~ "${OldWorkflowID}" ]]
-            then
-              echo "Deleting ${OldWorkflowID}"
-              aws s3 rm s3://udapeople-${OldWorkflowID} --recursive
-              aws cloudformation delete-stack --stack-name backend-${OldWorkflowID}
-              aws cloudformation delete-stack --stack-name frontend-${OldWorkflowID}
-            fi
+    
+            for i in "${STACKS[@]}"
+            do
+              if [[ "$i" != "${OldWorkflowID}" ]]
+              then
+                echo "Deleting $i"
+                export T1=("${i##udapeople-frontend-}")
+                export T2=("${T1##udapeople-backend-}")
+                aws s3 rm s3://udapeople-$T2 --recursive 
+                aws cloudformation delete-stack --stack-name $i
+              fi
+            done
 
 workflows:
   default:
