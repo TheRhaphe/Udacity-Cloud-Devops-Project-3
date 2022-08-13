@@ -8,4 +8,4 @@ http://udapeople-038d745.s3-website-us-east-1.amazonaws.com
 https://d3aaapm3ayyv6v.cloudfront.net
 
 [URL04]
-http://ec2-52-91-25-62.compute-1.amazonaws.com:3030/api/status
+http://ec2-44-201-215-105.compute-1.amazonaws.com:3030/api/status
