@@ -9,3 +9,6 @@ https://d3aaapm3ayyv6v.cloudfront.net
 
 [URL04]
 http://ec2-3-83-141-149.compute-1.amazonaws.com:3030/api/status
+
+[URL05]
+http://ec2-54-204-91-65.compute-1.amazonaws.com:9090/targets
