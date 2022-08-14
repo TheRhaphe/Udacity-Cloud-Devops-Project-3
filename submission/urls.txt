@@ -2,10 +2,10 @@
 https://github.com/TheRhaphe/Udacity-Cloud-Devops-Project-3
 
 [URL02]
-http://udapeople-a8f8fce.s3-website-us-east-1.amazonaws.com
+http://udapeople-c116176.s3-website-us-east-1.amazonaws.com
 
 [URL03]
 https://d3aaapm3ayyv6v.cloudfront.net
 
 [URL04]
-http://ec2-44-201-215-105.compute-1.amazonaws.com:3030/api/status
+http://ec2-3-83-141-149.compute-1.amazonaws.com:3030/api/status
